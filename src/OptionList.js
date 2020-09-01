@@ -27,15 +27,18 @@ const OptionList = ({options, limit, moreOptions, noOptions, onSelect}) => {
   return (
     <ScrollView style={styles.container}>
       {options.length === 0 && <DummyListItem text={noOptions} />}
-      {options.length &&
+      {options.length > 0 &&
         options.map((option, index) => {
           if (
             index < limit - 1 ||
             (index === limit - 1 && options.lenght === limit)
           ) {
-            return <ListItem text={option} onPress={onSelect} />;
+            return <ListItem text={option} onPress={onSelect} key={option} />;
+          } else if (index === limit - 1) {
+            return <DummyListItem text={moreOptions} key={moreOptions} />;
+          } else {
+            return null;
           }
-          return <DummyListItem text={moreOptions} />;
         })}
     </ScrollView>
   );
@@ -49,7 +52,7 @@ OptionList.propTypes = {
   onSelect: PropTypes.func.isRequired,
 };
 OptionList.defaultProps = {
-  limit: 6,
+  limit: 10,
   moreOptions: '...',
   noOptions: 'No options availabe',
 };

@@ -1,9 +1,10 @@
 import React, {useEffect, useState} from 'react';
 
+import {colors} from './data';
 import Autocomplete from './Autocomplete';
 
 const AcContainer = () => {
-  const [options] = useState([]);
+  const [options] = useState(colors());
   const [isLoading, setLoading] = useState(false);
   const [hasError, setError] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');

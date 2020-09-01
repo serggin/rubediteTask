@@ -1,5 +1,6 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useRef} from 'react';
 import {
+  Alert,
   View,
   Text,
   TextInput,
@@ -13,23 +14,50 @@ import OptionList from './OptionList';
 
 const Autocomplete = ({options}) => {
   const [searchText, setSearchText] = useState('');
-  //const [showOptions, setShowOptions] = useState(false);
   const [autocompleteOptions, setAutocompleteOptions] = useState([]);
 
+  const [timeoutId, setTimeoutId] = useState(0);
+
   useEffect(() => {
+    //console.log('useEffect() timeoutId.current=', timeoutId.current);
+    cleanup();
     if (searchText.length > 0) {
-      //setShowOptions(true);
       setAutocompleteOptions(
-        options.filter((option) => option.indexOf(searchText) > -1),
+        options.filter(
+          (option) =>
+            option.toLowerCase().indexOf(searchText.toLowerCase()) > -1,
+        ),
       );
+      const tId = setTimeout(() => {
+        handle();
+      }, 1000);
+      setTimeoutId(tId);
     } else {
       setAutocompleteOptions([]);
     }
+    return () => {
+      cleanup();
+    };
   }, [options, searchText]);
+
+  const cleanup = () => {
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
+  };
+
+  const handle = () => {
+    Alert.alert('Timeout', searchText);
+  };
 
   const onChange = (text) => {
     setSearchText(text);
     console.log('onChange() text=', text);
+  };
+
+  const onSelect = (text) => {
+    setSearchText(text);
+    console.log('onSelect() text=', text);
   };
 
   return (
@@ -38,10 +66,12 @@ const Autocomplete = ({options}) => {
         style={styles.input}
         placeholder="Color's name"
         value={searchText}
-        onChangeText={(text) => {}}
+        onChangeText={(text) => {
+          onChange(text);
+        }}
       />
       {searchText.length > 0 && (
-        <OptionList options={autocompleteOptions} onSelect={onChange} />
+        <OptionList options={autocompleteOptions} onSelect={onSelect} />
       )}
     </View>
   );
