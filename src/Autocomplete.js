@@ -5,18 +5,28 @@ import {
   Text,
   TextInput,
   StyleSheet,
+  ScrollView,
   ActivityIndicator,
 } from 'react-native';
 
 import PropTypes from 'prop-types';
 
 import OptionList from './OptionList';
+import {getBackgroundColor} from 'react-native/Libraries/LogBox/UI/LogBoxStyle';
 
-const ColorItem = ({color}) => (
-  <View style={styles.colorItem}>
-    <Text>{color.name}</Text>
-  </View>
-);
+const ColorItem = ({color}) => {
+  const boxStyle = {backgroundColor: '#' + color.hex};
+  return (
+    <View style={styles.colorItem}>
+      <View style={[styles.colorSquare, boxStyle]} />
+      <Text style={styles.colorText}>
+        {color.name.toLowerCase()} ( #{color.hex} )
+      </Text>
+    </View>
+  );
+};
+
+const SEARCH_TIMEOUT = 3000;
 
 const Autocomplete = ({
   options,
@@ -32,7 +42,6 @@ const Autocomplete = ({
   const [timeoutId, setTimeoutId] = useState(0);
 
   useEffect(() => {
-    //console.log('useEffect() timeoutId.current=', timeoutId.current);
     setEditing(true);
     cleanup();
     if (searchText.length > 0) {
@@ -44,7 +53,7 @@ const Autocomplete = ({
       );
       const tId = setTimeout(() => {
         handleTimeout();
-      }, 1000);
+      }, SEARCH_TIMEOUT);
       setTimeoutId(tId);
     } else {
       setAutocompleteOptions([]);
@@ -71,21 +80,23 @@ const Autocomplete = ({
 
   const onChange = (text) => {
     setSearchText(text);
-    console.log('onChange() text=', text);
   };
 
   const onSelect = (text) => {
     setSearchText(text);
-    console.log('onSelect() text=', text);
   };
 
   return (
     <View style={styles.container}>
-      {isLoading && <Text>Запрос выполняется ...</Text>}
-      {hasError && <Text style={styles.error}>{errorMsg}</Text>}
+      <Text style={styles.headerText}>Палитра цветов React Native</Text>
+      {!editing && hasError && <Text style={styles.error}>{errorMsg}</Text>}
+      {isLoading && <Text style={styles.status}>Запрос выполняется ...</Text>}
+      {!isLoading && (
+        <Text style={styles.status}>Введите название цвета :</Text>
+      )}
       <TextInput
         style={styles.input}
-        placeholder="Color's name"
+        placeholder="Наименование цвета"
         value={searchText}
         editable={!isLoading}
         onChangeText={(text) => {
@@ -95,7 +106,18 @@ const Autocomplete = ({
       {editing && searchText.length > 0 && (
         <OptionList options={autocompleteOptions} onSelect={onSelect} />
       )}
-      {!editing && colors.map((color) => <ColorItem color={color} />)}
+      {!isLoading &&
+        !editing &&
+        searchText.length > 0 &&
+        colors.length == 0 &&
+        !hasError && <Text style={styles.status}>Данные не найдены</Text>}
+      {!isLoading && !editing && colors.length > 0 && (
+        <ScrollView>
+          {colors.map((color) => (
+            <ColorItem color={color} key={color.hex} />
+          ))}
+        </ScrollView>
+      )}
     </View>
   );
 };
@@ -113,13 +135,45 @@ Autocomplete.defaultProps = {
   colors: [],
 };
 
+const FONT_SIZE = 16;
+
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     flexDirection: 'column',
+    justifyContent: 'flex-start',
+    padding: 10,
+    backgroundColor: 'beige',
   },
-  input: {},
+  headerText: {
+    fontSize: FONT_SIZE * 1.4,
+    fontWeight: 'bold',
+  },
+  input: {
+    backgroundColor: 'white',
+    fontSize: FONT_SIZE,
+  },
+  status: {
+    paddingBottom: 10,
+    paddingTop: 10,
+  },
   error: {
     color: 'red',
+    paddingBottom: 10,
+  },
+  colorItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingTop: 10,
+  },
+  colorSquare: {
+    padding: FONT_SIZE,
+    borderColor: 'lightgrey',
+    borderWidth: 1,
+    marginRight: 10,
+  },
+  colorText: {
+    fontSize: FONT_SIZE,
   },
 });
 

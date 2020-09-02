@@ -7,11 +7,10 @@ const serverDelay = 2000;
 
 export const fetch = (path) => {
   const searchString = path.substr(HOST.length).toLowerCase();
-  console.log('searchString=', searchString);
 
   return new Promise((resolve, reject) => {
     if (Math.random() < errorProbability) {
-      reject('Some network error');
+      reject('Имитация сетевой ошибки');
     }
     const result = webcolors.filter(
       (color) => color.name.toLowerCase().indexOf(searchString) > -1,

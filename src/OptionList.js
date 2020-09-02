@@ -25,7 +25,7 @@ const DummyListItem = ({text}) => (
 
 const OptionList = ({options, limit, moreOptions, noOptions, onSelect}) => {
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView contentContainerStyle={styles.container}>
       {options.length === 0 && <DummyListItem text={noOptions} />}
       {options.length > 0 &&
         options.map((option, index) => {
@@ -57,11 +57,17 @@ OptionList.defaultProps = {
   noOptions: 'No options availabe',
 };
 
+const FONT_SIZE = 16;
+
 const styles = StyleSheet.create({
   container: {
     backgroundColor: 'lavender',
+    paddingVertical: 10,
   },
-  itemText: {},
+  item: {},
+  itemText: {
+    fontSize: FONT_SIZE,
+  },
 });
 
 export default OptionList;

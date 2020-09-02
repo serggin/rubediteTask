@@ -1,5 +1,5 @@
 import webcolors from './webcolors.json';
 
 export const colorNames = () => {
-  return webcolors.map((color) => color.name).sort();
+  return webcolors.map((color) => color.name.toLowerCase()).sort();
 };
