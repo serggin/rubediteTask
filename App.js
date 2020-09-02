@@ -7,21 +7,11 @@
  */
 
 import React from 'react';
-import {
-  SafeAreaView,
-  StyleSheet,
-  ScrollView,
-  View,
-  Text,
-  StatusBar,
-} from 'react-native';
 
 import AcContainer from './src/AcContainer';
 
 const App: () => React$Node = () => {
   return <AcContainer />;
 };
-
-const styles = StyleSheet.create({});
 
 export default App;

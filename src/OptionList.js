@@ -2,11 +2,9 @@ import React from 'react';
 import {
   View,
   Text,
-  TextInput,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
-  ActivityIndicator,
 } from 'react-native';
 
 import PropTypes from 'prop-types';

@@ -1,18 +1,15 @@
-import React, {useEffect, useState, useRef} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
-  Alert,
   View,
   Text,
   TextInput,
   StyleSheet,
   ScrollView,
-  ActivityIndicator,
 } from 'react-native';
 
 import PropTypes from 'prop-types';
 
 import OptionList from './OptionList';
-import {getBackgroundColor} from 'react-native/Libraries/LogBox/UI/LogBoxStyle';
 
 const ColorItem = ({color}) => {
   const boxStyle = {backgroundColor: '#' + color.hex};
